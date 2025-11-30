@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Permisos GCP</title>
+</head>
+<body>
+    <h1>Registro de Permisos - Piloto</h1>
+
+    <form action="/guardar" method="POST">
+
+        <label>Ticket SN</label><br>
+        <input type="text" name="ticket"><br><br>
+
+        <label>Fecha</label><br>
+        <input type="date" name="fecha"><br><br>
+
+        <label>Usuario / Grupo</label><br>
+        <input type="text" name="usuario"><br><br>
+
+        <label>Acción</label><br>
+        <select name="accion">
+            <option>Agregar usuario a grupo</option>
+            <option>Crear grupo nuevo</option>
+            <option>Modificar rol</option>
+            <option>Asignar rol a grupo</option>
+            <option>Crear custom role</option>
+        </select><br><br>
+
+        <label>Grupo</label><br>
+        <input type="text" name="grupo"><br><br>
+
+        <label>Rol / Custom Role</label><br>
+        <input type="text" name="rol"><br><br>
+
+        <label>Permisos aplicados</label><br>
+        <textarea name="permisos" rows="4"></textarea><br><br>
+
+        <label>Proyecto / Contexto</label><br>
+        <input type="text" name="proyecto"><br><br>
+
+        <label>Responsable</label><br>
+        <input type="text" name="responsable"><br><br>
+
+        <button type="submit">Registrar</button>
+    </form>
+
+</body>
+</html>
