@@ -29,23 +29,22 @@ runcmd:
   - mkdir -p /opt/piloto/html
   - mkdir -p /opt/piloto/backend
   - mkdir -p /opt/piloto/data
-  - mkdir -p /opt/piloto/venv
-
-  # Crear entorno virtual e instalar Flask
   - python3 -m venv /opt/piloto/venv
+
+  # Instalar dependencias Python
   - /opt/piloto/venv/bin/pip install flask
 
-  # Descargar archivos desde GitHub
-  - curl -L -o /opt/piloto/html/index.html https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/index.html
-  - curl -L -o /opt/piloto/backend/app.py https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/app.py
+  # Descargar frontend y backend
+  - curl -L -o /opt/piloto/html/index.html https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/frontend/index.html
+  - curl -L -o /opt/piloto/backend/app.py https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/backend/app.py
 
-  # Configurar Nginx
-  - rm /etc/nginx/sites-enabled/default
-  - printf "server {\n    listen 80;\n    server_name _;\n    root /opt/piloto/html;\n    index index.html;\n    location /guardar {\n        proxy_pass http://127.0.0.1:5000;\n    }\n}\n" > /etc/nginx/sites-available/piloto
+  # Nginx
+  - rm -f /etc/nginx/sites-enabled/default
+  - printf "server {\n    listen 80;\n    root /opt/piloto/html;\n    index index.html;\n    location /guardar {\n        proxy_pass http://127.0.0.1:5000;\n    }\n}\n" > /etc/nginx/sites-available/piloto
   - ln -s /etc/nginx/sites-available/piloto /etc/nginx/sites-enabled/piloto
   - systemctl restart nginx
 
-  # Levantar Flask
+  # Iniciar Flask
   - systemctl daemon-reload
   - systemctl enable piloto_flask
   - systemctl start piloto_flask
