@@ -1,175 +1,57 @@
-📄 CONTENIDO COMPLETO DE README.md
-# 🚀 Piloto de Registro de Permisos en la Nube  
+Aquí tienes un ejemplo de cómo debería verse:
 
-Sistema simple para registrar permisos creados en GCP / Azure / OCI sin depender de ServiceNow.  
-Incluye:
+# Piloto de Registro de Permisos
 
-- Frontend HTML  
-- Backend Python/Flask  
-- Almacenamiento en CSV local  
-- Cloud-init para desplegar automáticamente en Azure  
-- Infraestructura 100% reproducible usando Git  
+Este sistema permite registrar permisos de acceso en nubes (GCP, Azure, OCI), almacenarlos en CSV y exportarlos a Excel.
+
+## 🚀 Despliegue Automático
+
+Para crear una nueva VM en Azure con todo configurado:
+
+1. Crea una nueva **VM Ubuntu** (Ubuntu 22.04 recomendado).
+2. En la sección **Advanced → Custom data**, pega el contenido del archivo **cloud-init/cloud-init.yaml**.
+3. Completa la creación de la VM.
+4. Espera unos minutos hasta que la VM esté configurada automáticamente.
+
+### Rutas disponibles:
+
+- **/guardar**: Registrar un nuevo permiso (POST).
+- **/listar**: Ver los registros de permisos (GET) en formato JSON.
+- **/descargar**: Descargar todos los registros como archivo Excel (GET).
+
+### Logs y Datos
+
+Los registros se guardan en **/opt/piloto/data/permisos.csv** y los logs de la aplicación en **/opt/piloto/data/app.log**.
 
 ---
 
-# 📁 Estructura del repositorio
+## 📁 Estructura del repositorio
 
 
 
 permiso-piloto/
 │
 ├── frontend/
-│ └── index.html
-│
+│ └── index.html # Formulario de registro
 ├── backend/
-│ ├── app.py
-│ └── requirements.txt
-│
+│ ├── app.py # Código de la aplicación Flask
+│ └── requirements.txt # Dependencias de Python
 ├── cloud-init/
-│ └── cloud-init.yaml
-│
-└── README.md
+│ └── cloud-init.yaml # Script de configuración de la VM
+└── README.md # Documentación
 
 
 ---
 
-# 🟢 ¿Qué hace este sistema?
+## 🛠 Cómo funciona
 
-Permite registrar:
+### 1. **Formulario de Registro**  
+El formulario en **index.html** permite ingresar permisos. Los datos se envían a la ruta **/guardar**.
 
-- Número de ticket  
-- Fecha  
-- Usuario o Grupo  
-- Acción realizada (crear grupo, asignar rol, modificar rol, etc.)  
-- Rol asignado o creado  
-- Permisos aplicados  
-- Proyecto / Contexto  
-- Responsable técnico  
+### 2. **Ver los registros**  
+Accede a la ruta **/listar** para obtener los registros en formato JSON.
 
-Cada registro se guarda automáticamente en:
-
-
-
-/opt/piloto/data/permisos.csv
-
-
-Esto crea un **rastro de auditoría simple y consultable**.
-
----
-
-# 🛠 Cómo desplegar la VM en Azure (Automático)
-
-### 1️⃣ Crear una VM Ubuntu en Azure  
-- Distribución recomendada: **Ubuntu 22.04**  
-- Tamaño: B1s es suficiente  
-- Autenticación: SSH o password  
-
-### 2️⃣ En la creación, ir a:  
-**Advanced → Custom data**
-
-### 3️⃣ Pegar el contenido del archivo:  
-`cloud-init/cloud-init.yaml`
-
-Ese archivo:
-
-- Instala nginx  
-- Instala Python3  
-- Crea carpetas  
-- Descarga el frontend y backend desde GitHub  
-- Instala Flask  
-- Configura nginx como reverse proxy  
-- Crea un servicio systemd para Flask  
-- Arranca todo automáticamente  
-
-### 4️⃣ Crear la VM
-
-### 5️⃣ Abrir en el navegador:  
-
-
-http://<IP_PUBLICA>
-
-
----
-
-# 👨‍💻 Funcionamiento
-
-### 🔹 Frontend  
-El formulario HTML envía los datos a:
-
-
-
-POST /guardar
-
-
-### 🔹 Backend (Flask)  
-El backend:
-
-- recibe los datos del formulario  
-- escribe una línea en el CSV  
-- responde con “Permiso registrado correctamente”  
-
-### 🔹 CSV  
-El archivo queda en:
-
-
-
-/opt/piloto/data/permisos.csv
-
-
-Para verlo:
-
-
-
-sudo cat /opt/piloto/data/permisos.csv
-
-
----
-
-# 🔄 Cómo actualizar la VM con nuevos cambios del repo
-
-Si modificas `index.html` o `app.py`:
-
-1. Haces commit + push  
-2. En la VM reinicias:
-
-
-
-sudo systemctl restart piloto_flask
-sudo systemctl restart nginx
-
-
-O simplemente vuelves a crear una VM con el mismo cloud-init.  
-Azure instalará la última versión del repo automáticamente.
-
----
-
-# 🔍 Logs útiles
-
-### Ver estado del backend:
-
-
-sudo systemctl status piloto_flask
-
-
-### Logs en vivo:
-
-
-sudo journalctl -u piloto_flask -f
-
-
-### Logs de nginx:
-
-
-sudo tail -f /var/log/nginx/error.log
-
-
----
-
-# 🧪 Probar backend manualmente
-
-
-
-curl -X POST http://localhost:5000/guardar
- -d "ticket=123"
+### 3. **Descargar Excel**  
+Accede a **/descargar** para obtener un archivo `.xlsx` con todos los registros de permisos.
 
 
