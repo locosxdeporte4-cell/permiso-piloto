@@ -173,17 +173,3 @@ curl -X POST http://localhost:5000/guardar
  -d "ticket=123"
 
 
----
-
-# ☁ Ideas futuras (opcionales)
-
-- Página `/listar` para ver todos los registros en tabla  
-- Exportación a Excel  
-- Envío automático a Azure Storage  
-- Autenticación simple para evitar uso público  
-- Reemplazar CSV por SQLite  
-
----
-
-# ✔ ¿Quieres que te agregue la página `/listar` + backend para mostrar los permisos?
-Dímelo y te la dejo lista.
