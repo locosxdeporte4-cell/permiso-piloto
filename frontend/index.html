@@ -7,7 +7,6 @@
     <h1>Registro de Permisos - Piloto</h1>
 
     <form action="/guardar" method="POST">
-
         <label>Ticket SN</label><br>
         <input type="text" name="ticket" required><br><br>
 
@@ -42,6 +41,13 @@
         <input type="text" name="responsable"><br><br>
 
         <button type="submit">Registrar</button>
+    </form>
+
+    <br>
+
+    <!-- Botón para descargar el archivo Excel -->
+    <form action="/descargar" method="GET">
+        <button type="submit">Descargar Excel</button>
     </form>
 
 </body>
