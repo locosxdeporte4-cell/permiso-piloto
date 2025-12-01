@@ -1,5 +1,3 @@
-Aquí tienes un ejemplo de cómo debería verse:
-
 # Piloto de Registro de Permisos
 
 Este sistema permite registrar permisos de acceso en nubes (GCP, Azure, OCI), almacenarlos en CSV y exportarlos a Excel.
