@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import csv
 import os
+import pandas as pd
 from datetime import datetime
 
 app = Flask(__name__)
@@ -61,6 +62,7 @@ def guardar():
 def status():
     return "OK - Flask funcionando"
 
+
 @app.route("/listar", methods=["GET"])
 def listar():
     """Devuelve todos los registros en JSON"""
@@ -75,8 +77,7 @@ def listar():
     except Exception as e:
         log_event(f"ERROR listar: {str(e)}")
         return "Error en servidor", 500
-        import pandas as pd
-from flask import send_file
+
 
 @app.route("/descargar", methods=["GET"])
 def descargar():
