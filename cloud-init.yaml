@@ -1,0 +1,51 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+  - python3
+  - python3-pip
+  - python3-venv
+  - curl
+
+write_files:
+  - path: /etc/systemd/system/piloto_flask.service
+    content: |
+      [Unit]
+      Description=Flask piloto
+      After=network.target
+
+      [Service]
+      User=root
+      WorkingDirectory=/opt/piloto/backend
+      ExecStart=/opt/piloto/venv/bin/python3 /opt/piloto/backend/app.py
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - mkdir -p /opt/piloto/html
+  - mkdir -p /opt/piloto/backend
+  - mkdir -p /opt/piloto/data
+  - mkdir -p /opt/piloto/venv
+
+  # Crear entorno virtual e instalar Flask
+  - python3 -m venv /opt/piloto/venv
+  - /opt/piloto/venv/bin/pip install flask
+
+  # Descargar archivos desde GitHub
+  - curl -L -o /opt/piloto/html/index.html https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/index.html
+  - curl -L -o /opt/piloto/backend/app.py https://raw.githubusercontent.com/locosxdeporte4-cell/permiso-piloto/main/app.py
+
+  # Configurar Nginx
+  - rm /etc/nginx/sites-enabled/default
+  - printf "server {\n    listen 80;\n    server_name _;\n    root /opt/piloto/html;\n    index index.html;\n    location /guardar {\n        proxy_pass http://127.0.0.1:5000;\n    }\n}\n" > /etc/nginx/sites-available/piloto
+  - ln -s /etc/nginx/sites-available/piloto /etc/nginx/sites-enabled/piloto
+  - systemctl restart nginx
+
+  # Levantar Flask
+  - systemctl daemon-reload
+  - systemctl enable piloto_flask
+  - systemctl start piloto_flask
