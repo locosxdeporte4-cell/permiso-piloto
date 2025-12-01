@@ -61,6 +61,20 @@ def guardar():
 def status():
     return "OK - Flask funcionando"
 
+@app.route("/listar", methods=["GET"])
+def listar():
+    """Devuelve todos los registros en JSON"""
+    try:
+        registros = []
+        if os.path.isfile(DATA_FILE):
+            with open(DATA_FILE, "r") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    registros.append(row)
+        return jsonify(registros)
+    except Exception as e:
+        log_event(f"ERROR listar: {str(e)}")
+        return "Error en servidor", 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
