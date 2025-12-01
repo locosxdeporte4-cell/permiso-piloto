@@ -75,6 +75,28 @@ def listar():
     except Exception as e:
         log_event(f"ERROR listar: {str(e)}")
         return "Error en servidor", 500
+        import pandas as pd
+from flask import send_file
+
+@app.route("/descargar", methods=["GET"])
+def descargar():
+    """Descarga todos los registros como archivo Excel"""
+    try:
+        if not os.path.isfile(DATA_FILE):
+            return "No hay datos para descargar", 404
+
+        # Leer CSV y generar Excel
+        df = pd.read_csv(DATA_FILE)
+        output_file = "/opt/piloto/data/permisos.xlsx"
+        df.to_excel(output_file, index=False)
+
+        # Enviar archivo al cliente
+        return send_file(output_file, as_attachment=True)
+
+    except Exception as e:
+        log_event(f"ERROR descargar: {str(e)}")
+        return "Error en servidor", 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
